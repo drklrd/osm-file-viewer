@@ -20,12 +20,17 @@ class App extends Component {
 
         render() {
             return (
-                <div>
-                    <form>
-                        <input type="file"
-                               name="myFile"
-                               onChange={this.handleChange} />
-                    </form>
+                <div className="container h-100">
+                    <div className="row h-100 justify-content-center align-items-center">
+                        <form>
+                            <div className="form-group">
+                                <label htmlFor="fileSelect">Select an OSM file</label>
+                                <input type="file"  className="form-control" id="fileSelect" onChange={this.handleChange} />
+                            </div>
+
+                        </form>
+                    </div>
+
                 </div>
             );
         }
