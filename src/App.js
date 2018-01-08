@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import osmtogeojson from 'osmtogeojson';
 
 class App extends Component {
 
@@ -12,10 +12,14 @@ class App extends Component {
             let file = event.target.files[0];
             console.log(file);
             let reader  = new FileReader();
-            reader.addEventListener("load", function () {
-                console.log('###',reader.result);
-            }, false);
-            reader.readAsText(file,"UTF-8");
+            reader.onload = function (e) {
+                let osm = reader.result.toString();
+                let parser = new DOMParser();
+                let xmlDoc = parser.parseFromString(osm,"text/xml");
+                let features = osmtogeojson(xmlDoc);
+                console.log('>>',features)
+            };
+            reader.readAsText(file);
         }
 
         render() {
@@ -27,10 +31,8 @@ class App extends Component {
                                 <label htmlFor="fileSelect">Select an OSM file</label>
                                 <input type="file"  className="form-control" id="fileSelect" onChange={this.handleChange} />
                             </div>
-
                         </form>
                     </div>
-
                 </div>
             );
         }
