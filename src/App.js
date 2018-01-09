@@ -31,6 +31,14 @@ class App extends Component {
         dlAnchorElem.click();
     }
 
+    renderPopup(tags){
+        let template = "";
+        for(let tag in tags){
+            template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
+        }
+        return template;
+    }
+
     handleChange(event){
         const file = event.target.files[0];
         const reader  = new FileReader();
@@ -39,8 +47,11 @@ class App extends Component {
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(osm,"text/xml");
             const features = osmtogeojson(xmlDoc);
-            const geoJSONLayer = window.L.geoJSON().addTo(this.map);
-            geoJSONLayer.addData(features);
+            const geoJSONLayer = window.L.geoJSON(features,{
+                onEachFeature : (feature,layer)=>{
+                    layer.bindPopup(this.renderPopup(feature.properties.tags));
+                }
+            }).addTo(this.map);
             this.map.fitBounds(geoJSONLayer.getBounds());
             this.setState({
                 geoJSONDownload : true,
