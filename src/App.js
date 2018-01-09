@@ -43,10 +43,15 @@ class App extends Component {
         const file = event.target.files[0];
         const reader  = new FileReader();
         reader.onload = function (e) {
-            const osm = reader.result.toString();
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(osm,"text/xml");
-            const features = osmtogeojson(xmlDoc);
+            let features;
+            if(file.name.split('.')[1] === 'osm'){
+                const osm = reader.result.toString();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(osm,"text/xml");
+                features = osmtogeojson(xmlDoc);
+            }else{
+                features = JSON.parse(reader.result);
+            }
             const geoJSONLayer = window.L.geoJSON(features,{
                 onEachFeature : (feature,layer)=>{
                     layer.bindPopup(this.renderPopup(feature.properties.tags));
