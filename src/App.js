@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
+import ReactDOM from  'react-dom';
+
 import osmtogeojson from 'osmtogeojson';
 
+import './App.css';
+
 class App extends Component {
+
+        componentDidMount() {
+            let map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map'])).setView([27.7172, 85.3240], 7);
+            window.L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
 
        constructor(props){
            super(props);
@@ -10,15 +22,16 @@ class App extends Component {
 
         handleChange(event){
             let file = event.target.files[0];
-            console.log(file);
             let reader  = new FileReader();
             reader.onload = function (e) {
                 let osm = reader.result.toString();
                 let parser = new DOMParser();
                 let xmlDoc = parser.parseFromString(osm,"text/xml");
                 let features = osmtogeojson(xmlDoc);
-                console.log('>>',features)
-            };
+                let geoJSONLayer = window.L.geoJSON().addTo(this.map);
+                geoJSONLayer.addData(features);
+                this.map.fitBounds(geoJSONLayer.getBounds());
+            }.bind(this);
             reader.readAsText(file);
         }
 
@@ -32,7 +45,9 @@ class App extends Component {
                                 <input type="file"  className="form-control" id="fileSelect" onChange={this.handleChange} />
                             </div>
                         </form>
+
                     </div>
+                    <div ref="map" className="map"/>
                 </div>
             );
         }
