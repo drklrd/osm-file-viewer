@@ -43,6 +43,7 @@ class App extends Component {
                         <div className="select-file">
                             <form>
                                 <div className="form-group">
+                                    <h4>OSM File Viewer </h4>
                                     <label htmlFor="fileSelect">Select an OSM file</label>
                                     <input type="file" className="form-control" id="fileSelect" onChange={this.handleChange} />
                                 </div>
