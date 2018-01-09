@@ -18,3 +18,14 @@ body{
     border-radius: 5px;
     cursor: move;
 }
+
+.download-geojson{
+    position: relative;
+    left : 25%;
+    border : none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 7px;
+    background: #2B82CB;
+    cursor: pointer !important;
+}
