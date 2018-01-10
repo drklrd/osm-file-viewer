@@ -8,7 +8,7 @@ import './App.css';
 class App extends Component {
 
     componentDidMount() {
-        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map'])).setView([27.7172, 85.3240], 3);
+        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map'])).setView([27.7172, 85.3240], 1);
         window.L.tileLayer.grayscale('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
