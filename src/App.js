@@ -8,7 +8,7 @@ import './App.css';
 class App extends Component {
 
     componentDidMount() {
-        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map'])).setView([27.7172, 85.3240], 1);
+        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map']),{editable: true}).setView([27.7172, 85.3240], 1);
         window.L.tileLayer.grayscale('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
@@ -18,8 +18,10 @@ class App extends Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.downloadGeoJSON = this.downloadGeoJSON.bind(this);
+        this.toggleEditable = this.toggleEditable.bind(this);
         this.state = {
-            geoJSONDownload : false
+            geoJSONDownload : false,
+            editable : false
         };
     }
 
@@ -37,6 +39,19 @@ class App extends Component {
             template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
         }
         return template;
+    }
+
+    toggleEditable(){
+        this.state.geoJSONLayer.eachLayer((layer)=>{
+            if(this.state.editable){
+                layer.disableEdit();
+            }else{
+                layer.enableEdit();
+            }
+            this.setState({
+                editable : !this.state.editable
+            });
+        });
     }
 
     handleChange(event){
@@ -61,6 +76,7 @@ class App extends Component {
             this.setState({
                 geoJSONDownload : true,
                 features,
+                geoJSONLayer,
                 file
             });
         }.bind(this);
@@ -81,7 +97,16 @@ class App extends Component {
                         </form>
                         {
                             this.state.geoJSONDownload &&
-                            <button className="download-geojson" onClick={this.downloadGeoJSON}> Download GeoJSON </button>
+                            <div>
+                                <div className="row">
+                                    <div className="col-xs-6">
+                                        <button className="download-geojson" onClick={this.toggleEditable}> Toggle Edit </button>
+                                    </div>
+                                    <div className="col-xs-6">
+                                        <button className="download-geojson" onClick={this.downloadGeoJSON}> Download GeoJSON </button>
+                                    </div>
+                                </div>
+                            </div>
                         }
                     </div>
                 </Draggable>
