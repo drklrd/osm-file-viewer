@@ -26,7 +26,7 @@ class App extends Component {
     }
 
     downloadGeoJSON(){
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state.features));
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state.geoJSONLayer.toGeoJSON()));
         const dlAnchorElem = document.createElement('a');
         dlAnchorElem.setAttribute("href", dataStr);
         dlAnchorElem.setAttribute("download",   `${this.state.file.name}.geojson`);
