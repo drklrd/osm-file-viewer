@@ -103,16 +103,27 @@ class App extends Component {
                             <div>
                                 <div className="row">
                                     <div className="col-xs-6">
-                                        <button className="download-geojson" onClick={this.toggleEditable}> Edit Mode </button>
+                                        <button className={this.state.editable ? 'download-geojson button-color-green' : 'download-geojson button-color-blue'} onClick={this.toggleEditable}> Edit Mode </button>
                                     </div>
                                     <div className="col-xs-6">
-                                        <button className="download-geojson" onClick={this.downloadGeoJSON}> Download GeoJSON </button>
+                                        <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> Download GeoJSON </button>
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
                 </Draggable>
+
+                {
+                    this.state.editable &&
+                    <Draggable>
+
+                        <div className="edit-mode">
+                            Edit mode is turned on. You can now edit features by clicking on it !
+                        </div>
+                    </Draggable>
+                }
+
                 <div ref="map" className="map"/>
             </div>
         );
