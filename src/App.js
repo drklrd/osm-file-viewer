@@ -21,7 +21,8 @@ class App extends Component {
         this.toggleEditable = this.toggleEditable.bind(this);
         this.state = {
             geoJSONDownload : false,
-            editable : false
+            editable : false,
+            clickedItem : undefined
         };
     }
 
@@ -42,15 +43,8 @@ class App extends Component {
     }
 
     toggleEditable(){
-        this.state.geoJSONLayer.eachLayer((layer)=>{
-            if(this.state.editable){
-                layer.disableEdit();
-            }else{
-                layer.enableEdit();
-            }
-            this.setState({
-                editable : !this.state.editable
-            });
+        this.setState({
+            editable : !this.state.editable
         });
     }
 
@@ -70,6 +64,15 @@ class App extends Component {
             const geoJSONLayer = window.L.geoJSON(features,{
                 onEachFeature : (feature,layer)=>{
                     layer.bindPopup(this.renderPopup(feature.properties.tags));
+                    layer.on('click',(e)=>{
+                        if(this.state.editable){
+                            e.target.closePopup();
+                            e.target.enableEdit();
+                        }
+                        this.setState({
+                            clickedItem : e.target
+                        })
+                    })
                 }
             }).addTo(this.map);
             this.map.fitBounds(geoJSONLayer.getBounds());
@@ -100,7 +103,7 @@ class App extends Component {
                             <div>
                                 <div className="row">
                                     <div className="col-xs-6">
-                                        <button className="download-geojson" onClick={this.toggleEditable}> Toggle Edit </button>
+                                        <button className="download-geojson" onClick={this.toggleEditable}> Edit Mode </button>
                                     </div>
                                     <div className="col-xs-6">
                                         <button className="download-geojson" onClick={this.downloadGeoJSON}> Download GeoJSON </button>
