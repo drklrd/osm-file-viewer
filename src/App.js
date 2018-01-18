@@ -34,15 +34,27 @@ class App extends Component {
         dlAnchorElem.click();
     }
 
-    renderPopup(tags){
+    renderPopup(properties){
         let template = "";
-        for(let tag in tags){
-            template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
+        function getTagValues(tags){
+            for(let tag in tags){
+                if(typeof tags[tag] !== 'object'){
+                    template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
+                }
+            }
         }
+        getTagValues(properties);
+        getTagValues(properties.tags);
         return template;
     }
 
     toggleEditable(){
+        this.state.geoJSONLayer.eachLayer((layer)=>{
+            if(this.state.editable){
+                layer.disableEdit();
+            }
+            layer.closePopup();
+        });
         this.setState({
             editable : !this.state.editable
         });
@@ -63,7 +75,7 @@ class App extends Component {
             }
             const geoJSONLayer = window.L.geoJSON(features,{
                 onEachFeature : (feature,layer)=>{
-                    layer.bindPopup(this.renderPopup(feature.properties.tags));
+                    layer.bindPopup(this.renderPopup(feature.properties));
                     layer.on('click',(e)=>{
                         if(this.state.editable){
                             e.target.closePopup();
